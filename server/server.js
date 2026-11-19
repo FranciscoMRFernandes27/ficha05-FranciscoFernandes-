@@ -82,12 +82,22 @@ app.get("/api/cartas", (req, res) => {
 });
 
 app.post("/api/cartas", (req, res) => {
-  const { name, type, attack } = req.body;
-  const card = { name, type, attack: Number(attack) || 0, defense: 0 };
+  const { name, type, attack } = req.body || {};
+
+  if (typeof name !== "string" || !name.trim() || !type) {
+    return res.status(400).json({ error: "A carta precisa de nome e tipo." });
+  }
+
+  const card = {
+    name: name.trim(),
+    type,
+    attack: Number(attack) || 0,
+    defense: 0,
+  };
 
   cards.push(card);
   saveCards();
-  res.status(201).json(card);
+  return res.status(201).json(card);
 });
 
 app.get("/api/cartas/aleatoria", (req, res) => {

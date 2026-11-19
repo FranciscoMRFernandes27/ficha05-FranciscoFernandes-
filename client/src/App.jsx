@@ -7,6 +7,7 @@ function App() {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [formError, setFormError] = useState(null);
   const [form, setForm] = useState(emptyForm);
   const [filter, setFilter] = useState("Todas");
   const [search, setSearch] = useState("");
@@ -31,6 +32,7 @@ function App() {
 
   async function handleSubmit(event) {
     event.preventDefault();
+    setFormError(null);
 
     const card = {
       name: form.name.trim(),
@@ -51,7 +53,7 @@ function App() {
       setCards((current) => [...current, savedCard]);
       setForm(emptyForm);
     } catch (err) {
-      console.error(err);
+      setFormError(err.message);
     }
   }
 
@@ -126,6 +128,7 @@ function App() {
           Acrescentar
         </button>
       </form>
+      {formError && <p>Erro ao acrescentar: {formError}</p>}
 
       <div>
         <button onClick={() => setFilter("Todas")}>Todas</button>
