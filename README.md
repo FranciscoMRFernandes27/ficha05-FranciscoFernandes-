@@ -39,3 +39,9 @@ O POST responde 400 com uma mensagem de erro quando a carta não tem nome ou tip
 Pergunta 3
 
 Quando acrescentamos uma carta, o Network tab mostra dois pedidos para `/api/cartas`. O primeiro é o `OPTIONS`, enviado automaticamente pelo browser como preflight para confirmar se o server aceita o pedido POST com JSON e a origem da app. Depois aparece o `POST`, que envia a carta no body. O `OPTIONS` vem antes porque o pedido cruza origens e usa JSON, por isso o browser verifica primeiro as permissões CORS.
+
+Pergunta 4
+
+Nas três versões da aula, o server inicia com `node server.js`, o POST acontece, mas as cartas ainda ficam apenas no array em memória. Depois de desligar o server com Ctrl+C, esse array desaparece e a carta deixa de estar disponível. Quando o server passa a usar `cartas.json`, lê as cartas desse ficheiro ao arrancar e grava o array novamente em cada POST. Por isso, ao reiniciar, a carta continua lá.
+
+Aluno: Francisco Fernandes
