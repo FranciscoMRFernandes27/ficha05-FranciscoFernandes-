@@ -9,6 +9,7 @@ function App() {
   const [error, setError] = useState(null);
   const [formError, setFormError] = useState(null);
   const [form, setForm] = useState(emptyForm);
+  const [sending, setSending] = useState(false);
   const [filter, setFilter] = useState("Todas");
   const [search, setSearch] = useState("");
   const [randomCard, setRandomCard] = useState(null);
@@ -33,6 +34,7 @@ function App() {
   async function handleSubmit(event) {
     event.preventDefault();
     setFormError(null);
+    setSending(true);
 
     const card = {
       name: form.name.trim(),
@@ -54,6 +56,8 @@ function App() {
       setForm(emptyForm);
     } catch (err) {
       setFormError(err.message);
+    } finally {
+      setSending(false);
     }
   }
 
@@ -124,8 +128,8 @@ function App() {
             onChange={handleChange}
           />
         </label>
-        <button type="submit">
-          Acrescentar
+        <button type="submit" disabled={sending}>
+          {sending ? "A enviar…" : "Acrescentar"}
         </button>
       </form>
       {formError && <p>Erro ao acrescentar: {formError}</p>}
