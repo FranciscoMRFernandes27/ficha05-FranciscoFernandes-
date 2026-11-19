@@ -29,18 +29,30 @@ function App() {
     setForm((current) => ({ ...current, [name]: value }));
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     const card = {
       name: form.name.trim(),
       type: form.type,
       attack: Number(form.attack) || 0,
-      defense: 0,
     };
 
-    setCards([...cards, card]);
-    setForm(emptyForm);
+    try {
+      const res = await fetch("http://localhost:3000/api/cartas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(card),
+      });
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const savedCard = await res.json();
+      setCards((current) => [...current, savedCard]);
+      setForm(emptyForm);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   let visible = cards
