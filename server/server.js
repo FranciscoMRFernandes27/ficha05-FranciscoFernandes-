@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 
 const app = express();
 const PORT = 3000;
@@ -42,10 +43,8 @@ const cards = [
   }
 ];
 
-app.use((req, res, next) => {
-  res.set("Access-Control-Allow-Origin", "http://localhost:5173");
-  next();
-});
+app.use(cors({ origin: "http://localhost:5173" }));
+app.use(express.json());
 
 function page(title, body) {
   return `<!DOCTYPE html>
@@ -110,6 +109,24 @@ app.get("/agora", (req, res) => {
 
 app.get("/api/cartas", (req, res) => {
   res.json(cards);
+});
+
+app.post("/api/cartas", (req, res) => {
+  const { name, type, attack } = req.body || {};
+
+  if (typeof name !== "string" || !name.trim() || !type) {
+    return res.status(400).json({ error: "A carta precisa de nome e tipo." });
+  }
+
+  const card = {
+    name: name.trim(),
+    type,
+    attack: Number(attack) || 0,
+    defense: 0,
+  };
+
+  cards.push(card);
+  return res.status(201).json(card);
 });
 
 app.get("/api/cartas/aleatoria", (req, res) => {
