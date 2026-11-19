@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import Card from "./Card.jsx";
 
+const emptyForm = { name: "", type: "Criatura", attack: "" };
+
 function App() {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [form, setForm] = useState(emptyForm);
   const [filter, setFilter] = useState("Todas");
   const [search, setSearch] = useState("");
   const [randomCard, setRandomCard] = useState(null);
@@ -20,6 +23,25 @@ function App() {
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setForm((current) => ({ ...current, [name]: value }));
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    const card = {
+      name: form.name.trim(),
+      type: form.type,
+      attack: Number(form.attack) || 0,
+      defense: 0,
+    };
+
+    setCards([...cards, card]);
+    setForm(emptyForm);
+  }
 
   let visible = cards
     .filter((card) => filter === "Todas" || card.type === filter)
@@ -64,6 +86,34 @@ function App() {
       <p>
         Tenho {cards.length} cartas · a mostrar {visible.length}
       </p>
+
+      <h2>Acrescentar carta</h2>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Nome
+          <input name="name" value={form.name} onChange={handleChange} />
+        </label>
+        <label>
+          Tipo
+          <select name="type" value={form.type} onChange={handleChange}>
+            <option value="Criatura">Criatura</option>
+            <option value="Feitiço">Feitiço</option>
+          </select>
+        </label>
+        <label>
+          Ataque
+          <input
+            name="attack"
+            type="number"
+            min="0"
+            value={form.attack}
+            onChange={handleChange}
+          />
+        </label>
+        <button type="submit">
+          Acrescentar
+        </button>
+      </form>
 
       <div>
         <button onClick={() => setFilter("Todas")}>Todas</button>
