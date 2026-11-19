@@ -35,3 +35,7 @@ API
 | POST | `/api/cartas` | JSON com `name`, `type` e `attack` | a carta criada, com status 201 |
 
 O POST responde 400 com uma mensagem de erro quando a carta não tem nome ou tipo.
+
+Pergunta 3
+
+Quando acrescentamos uma carta, o Network tab mostra dois pedidos para `/api/cartas`. O primeiro é o `OPTIONS`, enviado automaticamente pelo browser como preflight para confirmar se o server aceita o pedido POST com JSON e a origem da app. Depois aparece o `POST`, que envia a carta no body. O `OPTIONS` vem antes porque o pedido cruza origens e usa JSON, por isso o browser verifica primeiro as permissões CORS.
